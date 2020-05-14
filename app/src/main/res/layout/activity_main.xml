@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/main_tvPermission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Permission Test"
+        android:padding="8dp"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/main_tvDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dialog Test"
+        android:padding="8dp"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

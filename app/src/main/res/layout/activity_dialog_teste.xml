@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/dialogteste_bt1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Simple Dialog"/>
+
+    <Button
+        android:id="@+id/dialogteste_bt2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Custom Dialog"/>
+
+    <Button
+        android:id="@+id/dialogteste_bt3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Custom Dialog2"/>
+
+    <Button
+        android:id="@+id/dialogteste_bt4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Question Dialog"/>
+
+    <Button
+        android:id="@+id/dialogteste_bt5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Permission Dialog"/>
+
+    <Button
+        android:id="@+id/dialogteste_bt6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Success Dialog"/>
+
+    <Button
+        android:id="@+id/dialogteste_bt7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Error Dialog"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
