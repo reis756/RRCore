@@ -53,5 +53,5 @@ ext {
     allLicenses = ["Apache-2.0"]
 }
 
-    /*apply from: 'https://raw.githubusercontent.com/reis756/RRCore/scripts/scripts/install.gradle'
-    apply from: 'https://raw.githubusercontent.com/reis756/RRCore/scripts/scripts/bintray.gradle'*/
+    apply from: 'https://raw.githubusercontent.com/reis756/RRCore/scripts/install.gradle'
+    apply from: 'https://raw.githubusercontent.com/reis756/RRCore/scripts/bintray.gradle'
