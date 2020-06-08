@@ -35,7 +35,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
-
 ext {
     bintrayRepo = 'rrcore'
     bintrayName = 'rrcore'
@@ -54,5 +53,5 @@ ext {
     allLicenses = ["Apache-2.0"]
 }
 
-    apply from: 'https://raw.githubusercontent.com/reis756/RRCore/scripts/scripts/install.gradle'
-    apply from: 'https://raw.githubusercontent.com/reis756/RRCore/scripts/scripts/bintray.gradle'
+    /*apply from: 'https://raw.githubusercontent.com/reis756/RRCore/scripts/scripts/install.gradle'
+    apply from: 'https://raw.githubusercontent.com/reis756/RRCore/scripts/scripts/bintray.gradle'*/
