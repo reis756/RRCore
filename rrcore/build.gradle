@@ -1,0 +1,58 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+
+ext {
+    bintrayRepo = 'rrcore'
+    bintrayName = 'rrcore'
+    publishedGroupId = 'com.reisdeveloper.rrcore'
+    libraryName = 'RRCore'
+    artifact = 'rrcore'
+    libraryDescription = 'A core of main util classes for Android Kotlin'
+    siteUrl = 'https://github.com/reis756/RRCore'
+    gitUrl = 'https://github.com/reis756/RRCore.git'
+    libraryVersion = '0.0.1'
+    developerId = 'reis756'
+    developerName = 'Rodrigo Reis'
+    developerEmail = 'reis756004@gmail.com'
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+    apply from: 'https://raw.githubusercontent.com/reis756/RRCore/scripts/scripts/install.gradle'
+    apply from: 'https://raw.githubusercontent.com/reis756/RRCore/scripts/scripts/bintray.gradle'

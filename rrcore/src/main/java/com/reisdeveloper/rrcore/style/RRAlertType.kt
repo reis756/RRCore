@@ -1,4 +1,4 @@
-package com.reisdeveloper.rrcore.enuns
+package com.reisdeveloper.rrcore.style
 
 enum class RRAlertType {
     NORMAL_TYPE,

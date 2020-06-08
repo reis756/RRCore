@@ -3,7 +3,7 @@ package com.reisdeveloper.rrcore
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.reisdeveloper.rrcore.enuns.EPermissions
+import com.reisdeveloper.rrcore.permission.EPermissions
 import com.reisdeveloper.rrcore.permission.RRPermission
 import kotlinx.android.synthetic.main.activity_permission_teste.*
 
@@ -13,48 +13,53 @@ class PermissionTesteActivity: AppCompatActivity() {
         private const val TAG: String = "TESTEPERMISSAO"
     }
 
+    private val permission by lazy {
+        RRPermission(
+            this@PermissionTesteActivity,
+            getString(R.string.app_name)
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_permission_teste)
 
-        val permissions = RRPermission(
-            this@PermissionTesteActivity,
-            getString(R.string.app_name),
-            "Teste com mensagem"
-        )
-
         permission_btCamera.setOnClickListener {
-            permissions.addPermission("- Teste de mensagem personalizada", EPermissions.PERMISSION_CAMERA)
-            permissions.addPermission(null, EPermissions.PERMISSION_CONTATOS)
-            permissions.init()
+            permission.addPermission("- Teste de mensagem personalizada", EPermissions.PERMISSION_PHONE_STATE)
+            permission.addPermission(getString(R.string.app_name), EPermissions.PERMISSION_READ_WRITE_STORAGE)
+            permission.init()
         }
 
 
-        permissions.onRequestPermissionCallBack(object : RRPermission.OnRequestPermission {
+        permission.onRequestPermissionCallBack(object : RRPermission.OnRequestPermission {
             override fun notNow() {
                 Log.v(TAG, "agoraNao")
             }
 
             override fun continuePermission(permissoes: MutableList<String>) {
                 Log.v(TAG, "continuar")
-                permissions.init()
-                permissions.getPermission(permissoes)
+                permission.getPermission(permissoes)
             }
 
             override fun permissionDanied(enums: List<EPermissions>) {
                 Log.v(TAG, "permissaoNegada $enums")
             }
 
-            override fun permissionGaranted(enums: List<EPermissions>) {
+            override fun permissionGranted(enums: List<EPermissions>) {
                 Log.v(TAG, "permissaoAceita $enums")
-                Log.v(TAG, "permissaoAceita ${permissions.isAllowed()}")
+                Log.v(TAG, "permissaoAceita ${permission.isAllowed()}")
             }
 
             override fun allowed(enums: List<EPermissions?>) {
                 Log.v(TAG, "permitido enum = $enums")
 
-                permissions.isAllowed(EPermissions.PERMISSION_GPS_FOREGROUND)
+                permission.isAllowed(EPermissions.PERMISSION_GPS_FOREGROUND)
             }
         })
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permission.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

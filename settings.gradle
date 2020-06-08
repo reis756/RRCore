@@ -1,2 +1,3 @@
 rootProject.name='RRCore'
 include ':app'
+include ':rrcore'

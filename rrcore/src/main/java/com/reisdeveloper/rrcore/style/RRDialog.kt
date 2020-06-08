@@ -8,8 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.reisdeveloper.rrcore.R
-import com.reisdeveloper.rrcore.enuns.RRAlertType
-
 
 class RRDialog(context: Context) : Dialog(context) {
 
@@ -35,7 +33,7 @@ class RRDialog(context: Context) : Dialog(context) {
         textViewMessage = customLayout.findViewById(R.id.rrdialog_tvMessage)
     }
 
-    fun showSimpleDialog(title: String?, message: String, alertType: RRAlertType? = null) {
+    fun showSimpleDialog(title: String?, message: String, alertType: RRAlertType? = null): Dialog {
         return context.let {
             builder.setView(customLayout)
 
@@ -53,6 +51,21 @@ class RRDialog(context: Context) : Dialog(context) {
 
             builder.create()
             builder.show()
+        }?: throw IllegalStateException("Context cannot be null")
+    }
+
+    fun showCustomDialog(
+        title: String? = null,
+        message: String,
+        confirmText: String? = null,
+        negativeText: String? = null,
+        neltralText: String? = null,
+        returnDialog: ((typeReturn: String, Dialog) -> Unit)? = null
+    ): Dialog {
+        return context.let { _ ->
+            imageViewTitle.visibility = View.GONE
+
+            setCustomDialog(title, message, confirmText, negativeText, neltralText, returnDialog)
         }
     }
 
@@ -95,7 +108,7 @@ class RRDialog(context: Context) : Dialog(context) {
         negativeText: String? = null,
         neltralText: String? = null,
         returnDialog: ((typeReturn: String, Dialog) -> Unit)? = null
-    ):Dialog{
+    ): Dialog {
         return context.let { _ ->
             builder.setView(customLayout)
 
@@ -122,7 +135,7 @@ class RRDialog(context: Context) : Dialog(context) {
 
             builder.create()
             builder.show()
-        }
+        }?: throw IllegalStateException("Context cannot be null")
     }
 
     private fun chooseTypeDialog(alertType: RRAlertType): Drawable? {
@@ -136,4 +149,3 @@ class RRDialog(context: Context) : Dialog(context) {
         }
     }
 }
-

@@ -3,19 +3,14 @@ package com.reisdeveloper.rrcore.permission
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.reisdeveloper.rrcore.R
-import com.reisdeveloper.rrcore.enuns.EPermissions
-import com.reisdeveloper.rrcore.enuns.RRAlertType
+import com.reisdeveloper.rrcore.style.RRAlertType
 import com.reisdeveloper.rrcore.style.RRDialog
-
-/**
- * Created by Raphael Rodrigues
- * Updated by Rodrigo Reis
- */
 
 class RRPermission private constructor() {
 
@@ -35,7 +30,7 @@ class RRPermission private constructor() {
         mutableListOf<EPermissions>()
     }
 
-    constructor(context: Any, appName: String, mainMessage: String) : this() {
+    constructor(context: Any, appName: String, mainMessage: String? = null) : this() {
         when (context) {
             is Fragment -> this.fragment = context
             is Activity -> this.activity = context
@@ -63,7 +58,7 @@ class RRPermission private constructor() {
         }
     }
 
-    fun init() {
+    fun init(imageTitle: Drawable? = null) {
         enumSolitedPermissions.clear()
         enumSolitedPermissions.addAll(auxilarList)
         auxilarList.clear()
@@ -90,7 +85,7 @@ class RRPermission private constructor() {
             }
 
             if (permissions.size > 0) {
-                chamarExplicacao(gerarMensagem(this.appName, mainMessage), permissions, mensArray)
+                dialogPrePermissionMessage(prePermissionMessage(mainMessage), permissions, mensArray, imageTitle)
             }
         }
         permissionsList.clear()
@@ -104,8 +99,8 @@ class RRPermission private constructor() {
     fun isAllowed(): Boolean {
         val lista = mutableListOf<Boolean>()
         enumSolitedPermissions.forEach {
-            it.PermissionDetails.filterPermissionBySDK().forEach { d ->
-                lista.add(isAllowed(d.permission))
+            it.permissionDetails.filterPermissionBySDK().forEach { d ->
+                lista.add(isAllowed(d.stringPermission))
             }
         }
 
@@ -124,8 +119,8 @@ class RRPermission private constructor() {
      */
     fun isAllowed(enum: EPermissions): Boolean {
         val lista = mutableListOf<Boolean>()
-        enum.PermissionDetails.filterPermissionBySDK().forEach { d ->
-            lista.add(isAllowed(d.permission))
+        enum.permissionDetails.filterPermissionBySDK().forEach { d ->
+            lista.add(isAllowed(d.stringPermission))
         }
 
         lista.forEach {
@@ -155,36 +150,48 @@ class RRPermission private constructor() {
         return true
     }
 
-    private fun gerarMensagem(appName: String?, mensagem: String? = null): String {
+    private fun prePermissionMessage(mensagem: String? = null): String {
         return if (mensagem.isNullOrEmpty()) {
-            String.format(
-                "%s %s ",
-                context?.getString(R.string.for_a_better_experience_accept_the_permission),
-                appName
-            )
+            String.format("%s", context?.getString(R.string.need_permission))
         } else {
             mensagem
         }
     }
 
-    private fun chamarExplicacao(
+    private fun dialogPrePermissionMessage(
         title: String,
         permissoes: MutableList<String>,
-        messages: List<String>
+        messages: List<String>,
+        imageTitle: Drawable? = null
     ) {
         context?.let { c ->
-            RRDialog(c).showCustomDialog(
-                title = title,
-                message = messages.joinToString("\n- "),
-                alertType = RRAlertType.PERMISSION_TYPE,
-                confirmText = context?.getString(R.string.ok),
-                negativeText = context?.getString(R.string.cancel)
-            ) {  typeReturn, _ ->
-                if(typeReturn == context?.getString(R.string.ok))
-                    callback?.continuePermission(permissoes)
-                else
-                    callback?.notNow()
+            if(imageTitle != null) {
+                RRDialog(c).showCustomDialog(
+                    title = title,
+                    imageTitle = imageTitle,
+                    message = messages.joinToString("\n- "),
+                    confirmText = context?.getString(R.string.ok),
+                    negativeText = context?.getString(R.string.cancel)
+                ) { typeReturn, _ ->
+                    if (typeReturn == context?.getString(R.string.ok))
+                        callback?.continuePermission(permissoes)
+                    else
+                        callback?.notNow()
+                }
+            }else{
+                RRDialog(c).showCustomDialog(
+                    title = title,
+                    message = messages.joinToString("\n- "),
+                    confirmText = context?.getString(R.string.ok),
+                    negativeText = context?.getString(R.string.cancel)
+                ) { typeReturn, _ ->
+                    if (typeReturn == context?.getString(R.string.ok))
+                        callback?.continuePermission(permissoes)
+                    else
+                        callback?.notNow()
+                }
             }
+
         }
     }
 
@@ -194,43 +201,43 @@ class RRPermission private constructor() {
         grantResults: IntArray
     ) {
 
-        val listaPermissoesAceitas = mutableListOf<String>()
-        val listaPermissoesNegadas = mutableListOf<String>()
+        val listPermissionsGranted = mutableListOf<String>()
+        val listPermissionsDanied = mutableListOf<String>()
         for (i in permissions.indices) {
             if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                listaPermissoesAceitas.add(permissions[i])
+                listPermissionsGranted.add(permissions[i])
             } else {
-                listaPermissoesNegadas.add(permissions[i])
+                listPermissionsDanied.add(permissions[i])
             }
         }
 
-        val listaEnumAceito = getListEnumByPermissionList(listaPermissoesAceitas)
-        val listaEnumNegado = getListEnumByPermissionList(listaPermissoesNegadas)
+        val listEnumAcept = getListEnumByPermissionList(listPermissionsGranted)
+        val listEnumDanied = getListEnumByPermissionList(listPermissionsDanied)
 
-        if (listaEnumAceito.isNotEmpty())
-            callback?.permissionGaranted(listaEnumAceito)
+        if (listEnumAcept.isNotEmpty())
+            callback?.permissionGranted(listEnumAcept)
 
-        if (listaEnumNegado.isNotEmpty())
-            callback?.permissionDanied(listaEnumNegado)
+        if (listEnumDanied.isNotEmpty())
+            callback?.permissionDanied(listEnumDanied)
     }
 
-    fun addPermission(message: String? = null, enume: EPermissions) {
+    fun addPermission(message: String, enume: EPermissions) {
         auxilarList.add(enume)
-        val ret = enume.PermissionDetails
+        val ret = enume.permissionDetails
             .filterPermissionBySDK()
-            .flatMap { m -> m.permission.toList() }
+            .flatMap { m -> m.stringPermission.toList() }
 
         permissionsList.add(
-            Permission(enume.requestCode, message ?: enume.mens, ret.toTypedArray())
+            Permission(enume.requestCode, message, ret.toTypedArray())
         )
     }
 
     private fun getListEnumByPermissionList(lista: MutableList<String>): List<EPermissions> {
         val listaEnum = mutableListOf<EPermissions>()
         enumSolitedPermissions.filter { l ->
-            l.PermissionDetails
+            l.permissionDetails
                 .filterPermissionBySDK()
-                .flatMap { d -> d.permission.toList() }
+                .flatMap { d -> d.stringPermission.toList() }
                 .any { s -> lista.contains(s) }
         }.forEach {
             listaEnum.add(it)
@@ -243,9 +250,9 @@ class RRPermission private constructor() {
         var enum: EPermissions? = null
 
         enumSolitedPermissions.filter { l ->
-            l.PermissionDetails
+            l.permissionDetails
                 .filterPermissionBySDK()
-                .flatMap { d -> d.permission.toList() }
+                .flatMap { d -> d.stringPermission.toList() }
                 .any { s -> permissao.contains(s) }
         }.forEach {
             enum = it
@@ -258,7 +265,7 @@ class RRPermission private constructor() {
         fun notNow()
         fun continuePermission(permissoes: MutableList<String>)
         fun permissionDanied(enums: List<EPermissions>)
-        fun permissionGaranted(enums: List<EPermissions>)
+        fun permissionGranted(enums: List<EPermissions>)
         fun allowed(enums: List<EPermissions?>)
     }
 
@@ -266,4 +273,7 @@ class RRPermission private constructor() {
         return this.filter { p -> p.vMin <= Build.VERSION.SDK_INT }
     }
 
+    class PermissionDetails(val vMin: Int, vararg val stringPermission: String)
+
+    inner class Permission(var requestCode: Int, var message: String, var permissions: Array<String>)
 }

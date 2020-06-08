@@ -2,7 +2,7 @@ package com.reisdeveloper.rrcore
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.reisdeveloper.rrcore.enuns.RRAlertType
+import com.reisdeveloper.rrcore.style.RRAlertType
 import com.reisdeveloper.rrcore.style.RRDialog
 import kotlinx.android.synthetic.main.activity_dialog_teste.*
 
